@@ -15,13 +15,7 @@ namespace ForgottenSamurai
         public static bool gamePaused;
         public player player1;
         public Terrain terrain;
-        public static Vector3 cammeraPos;
-        public static Vector3 cammeraLookPos;
-        public static Vector3 cammeraLookVector;
-        public static Vector2 cammeraLookAngle;
-        public static float cammeraFOV;
-        public static float cammeraFarClip;
-
+        public Camera camera;
 
         public bool previusKeyTilde;
 
@@ -32,12 +26,7 @@ namespace ForgottenSamurai
             player1 = new player();
             player1.position = new Vector3(0, 16, 0);
             terrain = new Terrain();
-            cammeraPos = new Vector3(0, 20, -30);
-            cammeraLookVector = Vector3.UnitZ;
-            cammeraLookAngle = Vector2.Zero;
-            cammeraFOV = (float)Math.PI / 4;
-            cammeraFarClip = 800.0f;
-
+            camera = new Camera();
             previusKeyTilde = false;
 
             ResumeGame();
@@ -56,7 +45,7 @@ namespace ForgottenSamurai
             base.OnResize(e);
 
             GL.Viewport(ClientRectangle.X, ClientRectangle.Y, ClientRectangle.Width, ClientRectangle.Height);
-            Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(cammeraFOV, Width / (float)Height, 1.0f, cammeraFarClip);
+            Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(Camera.cameraFOV, Width / (float)Height, 1.0f, Camera.cameraFarClip);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref projection);
         }
@@ -74,33 +63,33 @@ namespace ForgottenSamurai
             {
                 if (Keyboard[Key.A])
                 {
-                    player1.position.X += (float)Math.Cos(cammeraLookAngle.X - (Math.PI / 2));
-                    player1.position.Z += (float)Math.Sin(cammeraLookAngle.X - (Math.PI / 2));
+                    player1.position.X += (float)Math.Cos(Camera.cameraLookAngle.X - (Math.PI / 2));
+                    player1.position.Z += (float)Math.Sin(Camera.cameraLookAngle.X - (Math.PI / 2));
                 }
                 if (Keyboard[Key.D])
                 {
-                    player1.position.X -= (float)Math.Cos(cammeraLookAngle.X - (Math.PI / 2));
-                    player1.position.Z -= (float)Math.Sin(cammeraLookAngle.X - (Math.PI / 2));
+                    player1.position.X -= (float)Math.Cos(Camera.cameraLookAngle.X - (Math.PI / 2));
+                    player1.position.Z -= (float)Math.Sin(Camera.cameraLookAngle.X - (Math.PI / 2));
                 }
 
                 if (Keyboard[Key.W])
                 {
-                    player1.position.X += (float)Math.Cos(cammeraLookAngle.X);
-                    player1.position.Z += (float)Math.Sin(cammeraLookAngle.X);
+                    player1.position.X += (float)Math.Cos(Camera.cameraLookAngle.X);
+                    player1.position.Z += (float)Math.Sin(Camera.cameraLookAngle.X);
                 }
                 if (Keyboard[Key.S])
                 {
-                    player1.position.X -= (float)Math.Cos(cammeraLookAngle.X);
-                    player1.position.Z -= (float)Math.Sin(cammeraLookAngle.X);
+                    player1.position.X -= (float)Math.Cos(Camera.cameraLookAngle.X);
+                    player1.position.Z -= (float)Math.Sin(Camera.cameraLookAngle.X);
                 }
 
-                cammeraPos = player1.position + new Vector3(0, player1.height, 0);
+                Camera.cameraPos = player1.position + new Vector3(0, player1.height, 0);
                 float deltaX = (Mouse.X - (ClientRectangle.Width / 2)) * 0.002f;
                 float deltaY = (Mouse.Y - ((ClientRectangle.Height - 24) / 2)) * 0.002f;
-                cammeraLookAngle.X += deltaX;
-                cammeraLookAngle.Y -= deltaY;
-                cammeraLookVector = (new Vector3((float)Math.Cos(cammeraLookAngle.X), 0, (float)Math.Sin(cammeraLookAngle.X)) * (float)Math.Cos(cammeraLookAngle.Y)) + new Vector3(0, (float)Math.Sin(cammeraLookAngle.Y), 0);
-                cammeraLookPos = cammeraPos + cammeraLookVector;
+                Camera.cameraLookAngle.X += deltaX;
+                Camera.cameraLookAngle.Y -= deltaY;
+                Camera.cameraLookVector = (new Vector3((float)Math.Cos(Camera.cameraLookAngle.X), 0, (float)Math.Sin(Camera.cameraLookAngle.X)) * (float)Math.Cos(Camera.cameraLookAngle.Y)) + new Vector3(0, (float)Math.Sin(Camera.cameraLookAngle.Y), 0);
+                Camera.cameraLookPos = Camera.cameraPos + Camera.cameraLookVector;
 
                 System.Windows.Forms.Cursor.Position = new System.Drawing.Point(Bounds.Left + (Bounds.Width / 2), Bounds.Top + (Bounds.Height / 2));
             }
@@ -139,7 +128,7 @@ namespace ForgottenSamurai
             else
                 GL.ClearColor(new Color4(50, 50, 50, 100));
 
-            Matrix4 modelview = Matrix4.LookAt(cammeraPos, cammeraLookPos, Vector3.UnitY);
+            Matrix4 modelview = Matrix4.LookAt(Camera.cameraPos, Camera.cameraLookPos, Vector3.UnitY);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref modelview);
 
