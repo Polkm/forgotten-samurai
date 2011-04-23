@@ -21,5 +21,13 @@ namespace ForgottenSamurai
             position = Vector3.Zero;
             height = 4.0f;
         }
+
+        public void LeftClick()
+        {
+        }
+
+        public void RightClick()
+        {
+        }
     }
 }
