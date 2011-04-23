@@ -14,6 +14,7 @@ namespace ForgottenSamurai
     class BlockSystem
     {
         public Vector3 position;
+        public Vector3 chunkPos;
         public static int size;
         public static float radius;
         public byte[, ,] blockIDs;
@@ -75,17 +76,21 @@ namespace ForgottenSamurai
                         currentType = blockIDs[x, y, z];
                         if (currentType != 0)
                         {
-                            if ((z - 1 > 0 && blockIDs[x, y, z - 1] == 0))
+                            if ((z - 1 >= 0 && blockIDs[x, y, z - 1] == 0) ||
+                                (z - 1 < 0 && chunkPos.Z - 1 >= 0 && Terrain.chunks[(int)chunkPos.X, (int)chunkPos.Y, (int)chunkPos.Z - 1].blockIDs[x, y, size - 1] == 0))
                                 front = true;
-                            if ((z + 1 < size && blockIDs[x, y, z + 1] == 0))
+                            if ((z + 1 < size && blockIDs[x, y, z + 1] == 0) ||
+                                (z + 1 >= size && chunkPos.Z + 1 < Terrain.size && Terrain.chunks[(int)chunkPos.X, (int)chunkPos.Y, (int)chunkPos.Z + 1].blockIDs[x, y, 0] == 0))
                                 back = true;
-                            if ((x + 1 < size && blockIDs[x + 1, y, z] == 0))
+                            if ((x + 1 < size && blockIDs[x + 1, y, z] == 0) ||
+                                (x + 1 >= size && chunkPos.X + 1 < Terrain.size && Terrain.chunks[(int)chunkPos.X + 1, (int)chunkPos.Y, (int)chunkPos.Z].blockIDs[0, y, z] == 0))
                                 left = true;
-                            if ((x - 1 > 0 && blockIDs[x - 1, y, z] == 0))
+                            if ((x - 1 >= 0 && blockIDs[x - 1, y, z] == 0) ||
+                                (x - 1 < 0 && chunkPos.X - 1 >= 0 && Terrain.chunks[(int)chunkPos.X - 1, (int)chunkPos.Y, (int)chunkPos.Z].blockIDs[size - 1, y, z] == 0))
                                 right = true;
                             if ((y + 1 >= size && (position.Y / size) + 1 >= Terrain.height) || (y + 1 < size && blockIDs[x, y + 1, z] == 0))
                                 top = true;
-                            if ((y - 1 > 0 && blockIDs[x, y - 1, z] == 0))
+                            if ((y - 1 >= 0 && blockIDs[x, y - 1, z] == 0))
                                 bottom = true;
 
                             pos = position + new Vector3(x, y, z);
@@ -117,36 +122,39 @@ namespace ForgottenSamurai
                             if (front)
                             {
                                 float[] faceColor = new float[] { color[0] * 0.7f, color[1] * 0.7f, color[2] * 0.7f };
+                                float[] darkFaceColor = new float[] { color[0] * 0.55f, color[1] * 0.55f, color[2] * 0.55f };
                                 tempVerts.AddRange(v110);
                                 tempColors.AddRange(faceColor);
                                 tempVerts.AddRange(v100);
-                                tempColors.AddRange(faceColor);
+                                tempColors.AddRange(darkFaceColor);
                                 tempVerts.AddRange(v000);
-                                tempColors.AddRange(faceColor);
+                                tempColors.AddRange(darkFaceColor);
                                 tempVerts.AddRange(v010);
                                 tempColors.AddRange(faceColor);
                             }
                             if (back)
                             {
+                                float[] faceColor = new float[] { color[0] * 0.8f, color[1] * 0.8f, color[2] * 0.8f };
                                 tempVerts.AddRange(v011);
-                                tempColors.AddRange(color);
+                                tempColors.AddRange(faceColor);
                                 tempVerts.AddRange(v001);
-                                tempColors.AddRange(color);
+                                tempColors.AddRange(faceColor);
                                 tempVerts.AddRange(v101);
-                                tempColors.AddRange(color);
+                                tempColors.AddRange(faceColor);
                                 tempVerts.AddRange(v111);
-                                tempColors.AddRange(color);
+                                tempColors.AddRange(faceColor);
                             }
                             if (left)
                             {
+                                float[] faceColor = new float[] { color[0] * 0.85f, color[1] * 0.85f, color[2] * 0.85f };
                                 tempVerts.AddRange(v110);
-                                tempColors.AddRange(color);
+                                tempColors.AddRange(faceColor);
                                 tempVerts.AddRange(v111);
-                                tempColors.AddRange(color);
+                                tempColors.AddRange(faceColor);
                                 tempVerts.AddRange(v101);
-                                tempColors.AddRange(color);
+                                tempColors.AddRange(faceColor);
                                 tempVerts.AddRange(v100);
-                                tempColors.AddRange(color);
+                                tempColors.AddRange(faceColor);
                             }
                             if (right)
                             {
