@@ -50,7 +50,7 @@ namespace ForgottenSamurai
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref projection);
         }
-
+        
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             base.OnUpdateFrame(e);
@@ -81,6 +81,12 @@ namespace ForgottenSamurai
                 {
                     player1.position.X -= (float)Math.Cos(Camera.cameraLookAngle.X);
                     player1.position.Z -= (float)Math.Sin(Camera.cameraLookAngle.X);
+                }
+
+                if (Mouse[MouseButton.Left])
+                {
+
+                    //RemoveBlock(int x, int y, int z)
                 }
 
                 camera.Update();
