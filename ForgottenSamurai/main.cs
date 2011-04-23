@@ -18,8 +18,6 @@ namespace ForgottenSamurai
         public static player player1;
         public Terrain terrain;
 
-        public bool previusKeyTilde;
-
         public Game() : base(800, 600, GraphicsMode.Default, "Forgotten Samurai")
         {
             VSync = VSyncMode.On;
@@ -28,10 +26,10 @@ namespace ForgottenSamurai
             player1.position = new Vector3(0, 16, 0);
             terrain = new Terrain();
             camera = new Camera();
-            previusKeyTilde = false;
             ResumeGame();
 
             base.Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>(Game_ButtonDown);
+            base.KeyPress += new EventHandler<KeyPressEventArgs>(Game_KeyPress);
         }
 
         void Game_ButtonDown(object sender, MouseButtonEventArgs e)
@@ -43,6 +41,17 @@ namespace ForgottenSamurai
             if (e.Button == MouseButton.Right)
             {
                 player1.RightClick();
+            }
+        }
+
+        void Game_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Keyboard[Key.Tilde])
+            {
+                if (!gamePaused)
+                    PauseGame();
+                else if (gamePaused)
+                    ResumeGame();
             }
         }
 
@@ -104,16 +113,6 @@ namespace ForgottenSamurai
 
                 camera.Update();
             }
-
-            if (Keyboard[Key.Tilde] && !previusKeyTilde)
-            {
-                if (!gamePaused)
-                    PauseGame();
-                else if (gamePaused)
-                    ResumeGame();
-            }
-
-            previusKeyTilde = Keyboard[Key.Tilde];
         }
 
         public void PauseGame()
