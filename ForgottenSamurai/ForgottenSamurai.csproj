@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="BlockSystem.cs" />
     <Compile Include="main.cs" />
+    <Compile Include="player.cs" />
     <Compile Include="Terrain\Terrain.cs" />
     <Compile Include="Terrain\TerrainGen.cs" />
   </ItemGroup>
@@ -43,6 +44,7 @@
     <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

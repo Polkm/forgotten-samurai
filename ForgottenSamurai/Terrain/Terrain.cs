@@ -13,7 +13,7 @@ namespace ForgottenSamurai
     {
         public static Random random;
         public static BlockSystem[, ,] chunks;
-        public static int size = 50;
+        public static int size = 10;
         public static int height = 1;
         float frustrumRadius;
 
@@ -22,9 +22,8 @@ namespace ForgottenSamurai
             random = new Random();
             chunks = new BlockSystem[size, 2, size];
             frustrumRadius = 0.0f;
-            
 
-            float buildCounter = 0;
+            float genCounter = 0;
             for (int x = 0; x < size; x++)
             {
                 for (int y = 0; y < height; y++)
@@ -33,10 +32,26 @@ namespace ForgottenSamurai
                     {
                         chunks[x, y, z] = new BlockSystem();
                         chunks[x, y, z].position = new Vector3(x * BlockSystem.size, y * BlockSystem.size, z * BlockSystem.size);
+                        chunks[x, y, z].chunkPos = new Vector3(x, y, z);
+                        Console.Clear();
+                        Console.Write(Math.Round(genCounter / (size * size * height) * 100.0f));
+                        Console.Write("% generated");
+                        genCounter++;
+                    }
+                }
+            }
+
+            float buildCounter = 0;
+            for (int x = 0; x < size; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    for (int z = 0; z < size; z++)
+                    {
                         chunks[x, y, z].GenerateVertexData();
                         Console.Clear();
                         Console.Write(Math.Round(buildCounter / (size * size * height) * 100.0f));
-                        Console.Write("% loaded");
+                        Console.Write("% vertex built");
                         buildCounter++;
                     }
                 }
@@ -69,7 +84,7 @@ namespace ForgottenSamurai
                         Vector3 chunkCenter = chunks[x, y, z].position + (new Vector3(16.0f, 16.0f, 16.0f) * 0.5f);
                         if (SphereIntersectsSphere(FrustrumCenter, frustrumRadius, chunkCenter, BlockSystem.radius))
                         {
-                            if (ShpereIntersectsCone(chunkCenter, BlockSystem.radius, Game.cammeraPos, vLookVector, (float)Math.Cos(Math.PI / 4.5), (float)Math.Sin(Math.PI / 4.5)))
+                            if (ShpereIntersectsCone(chunkCenter, BlockSystem.radius, Game.cammeraPos, vLookVector, (float)Math.Cos(Math.PI / 3), (float)Math.Sin(Math.PI / 3)))
                             {
                                 chunks[x, y, z].Draw();
                                 rendering++;
@@ -78,7 +93,7 @@ namespace ForgottenSamurai
                     }
                 }
             }
-            Console.WriteLine(rendering);
+            //Console.WriteLine(rendering);
         }
 
         public bool SphereIntersectsSphere(Vector3 pos1, float radius1, Vector3 pos2, float radius2)
