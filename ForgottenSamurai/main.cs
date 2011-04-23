@@ -28,7 +28,6 @@ namespace ForgottenSamurai
             terrain = new Terrain();
             camera = new Camera();
             previusKeyTilde = false;
-
             ResumeGame();
         }
 
@@ -57,8 +56,6 @@ namespace ForgottenSamurai
             if (Keyboard[Key.Escape])
                 Exit();
 
-
-
             if (!gamePaused)
             {
                 if (Keyboard[Key.A])
@@ -84,8 +81,8 @@ namespace ForgottenSamurai
                 }
 
                 Camera.cameraPos = player1.position + new Vector3(0, player1.height, 0);
-                float deltaX = (Mouse.X - (ClientRectangle.Width / 2)) * 0.002f;
-                float deltaY = (Mouse.Y - ((ClientRectangle.Height - 24) / 2)) * 0.002f;
+                float deltaX = (System.Windows.Forms.Cursor.Position.X - (Bounds.Left + (Bounds.Width / 2))) * 0.002f;
+                float deltaY = (System.Windows.Forms.Cursor.Position.Y - (Bounds.Top + (Bounds.Height / 2))) * 0.002f;
                 Camera.cameraLookAngle.X += deltaX;
                 Camera.cameraLookAngle.Y -= deltaY;
                 Camera.cameraLookVector = (new Vector3((float)Math.Cos(Camera.cameraLookAngle.X), 0, (float)Math.Sin(Camera.cameraLookAngle.X)) * (float)Math.Cos(Camera.cameraLookAngle.Y)) + new Vector3(0, (float)Math.Sin(Camera.cameraLookAngle.Y), 0);
