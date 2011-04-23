@@ -67,13 +67,13 @@ namespace ForgottenSamurai
             if (frustrumRadius == 0)
                 frustrumRadius = GetFrustrumRadius();
 
-            float fViewLen = Game.cammeraFarClip - 1.0f;
+            float fViewLen = Camera.cameraFarClip - 1.0f;
 
             // get the look vector of the camera from the view matrix
-            Vector3 vLookVector = Game.cammeraLookPos - Game.cammeraPos;
+            Vector3 vLookVector = Camera.cameraLookPos - Camera.cameraPos;
 
             // calculate the center of the sphere
-            Vector3 FrustrumCenter = Game.cammeraPos + (vLookVector * ((fViewLen * 0.5f) + 1.0f));
+            Vector3 FrustrumCenter = Camera.cameraPos + (vLookVector * ((fViewLen * 0.5f) + 1.0f));
 
             for (int x = 0; x < size; x++)
             {
@@ -84,7 +84,7 @@ namespace ForgottenSamurai
                         Vector3 chunkCenter = chunks[x, y, z].position + (new Vector3(16.0f, 16.0f, 16.0f) * 0.5f);
                         if (SphereIntersectsSphere(FrustrumCenter, frustrumRadius, chunkCenter, BlockSystem.radius))
                         {
-                            if (ShpereIntersectsCone(chunkCenter, BlockSystem.radius, Game.cammeraPos, vLookVector, (float)Math.Cos(Math.PI / 3), (float)Math.Sin(Math.PI / 3)))
+                            if (ShpereIntersectsCone(chunkCenter, BlockSystem.radius, Camera.cameraPos, vLookVector, (float)Math.Cos(Math.PI / 3), (float)Math.Sin(Math.PI / 3)))
                             {
                                 chunks[x, y, z].Draw();
                                 rendering++;
@@ -136,7 +136,7 @@ namespace ForgottenSamurai
 
         public float GetFrustrumRadius()
         {
-            float fViewLen = Game.cammeraFarClip - 1.0f;
+            float fViewLen = Camera.cameraFarClip - 1.0f;
 
             float fHeight = (float)(fViewLen * Math.Tan(Math.PI / 4.0 * 0.5));
 

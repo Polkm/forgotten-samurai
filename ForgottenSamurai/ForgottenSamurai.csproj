@@ -35,6 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BlockSystem.cs" />
+    <Compile Include="camera.cs" />
     <Compile Include="main.cs" />
     <Compile Include="player.cs" />
     <Compile Include="Terrain\Terrain.cs" />
