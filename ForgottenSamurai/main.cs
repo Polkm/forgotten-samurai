@@ -18,6 +18,8 @@ namespace ForgottenSamurai
         public static player player1;
         public Terrain terrain;
 
+        public static MouseDevice mouse;
+
         public Game() : base(800, 600, GraphicsMode.Default, "Forgotten Samurai")
         {
             VSync = VSyncMode.On;
@@ -77,6 +79,7 @@ namespace ForgottenSamurai
         {
             base.OnUpdateFrame(e);
             bounds = Bounds;
+            mouse = Mouse;
 
             if (Keyboard[Key.Escape])
                 Exit();
@@ -103,12 +106,6 @@ namespace ForgottenSamurai
                 {
                     player1.position.X -= (float)Math.Cos(Camera.cameraLookAngle.X);
                     player1.position.Z -= (float)Math.Sin(Camera.cameraLookAngle.X);
-                }
-
-                if (Mouse[MouseButton.Left])
-                {
-
-                    //RemoveBlock(int x, int y, int z)
                 }
 
                 camera.Update();
