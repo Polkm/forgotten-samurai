@@ -30,7 +30,20 @@ namespace ForgottenSamurai
             camera = new Camera();
             previusKeyTilde = false;
             ResumeGame();
-            
+
+            base.Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>(Game_ButtonDown);
+        }
+
+        void Game_ButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Button == MouseButton.Left)
+            {
+                player1.LeftClick();
+            }
+            if (e.Button == MouseButton.Right)
+            {
+                player1.RightClick();
+            }
         }
 
         protected override void OnLoad(EventArgs e)
