@@ -45,5 +45,28 @@ namespace ForgottenSamurai
 
             System.Windows.Forms.Cursor.Position = new System.Drawing.Point(Game.bounds.Left + (Game.bounds.Width / 2), Game.bounds.Top + (Game.bounds.Height / 2));
         }
+
+        public Vector3 GetDepthPos(int x, int y)
+        {
+		    int[] viewport = new int[4];
+		    double[] modelview = new double[16];
+            double[] projection = new double[16];
+		    float winX, winY, winZ;
+		    double posX, posY, posZ;
+
+            GL.GetDouble(GetPName.ModelviewMatrix, modelview);
+            GL.GetDouble(GetPName.ProjectionMatrix, projection);
+            GL.GetInteger(GetPName.Viewport, viewport);
+
+		    winX = (float)x;
+		    winY = (float)viewport[3] - (float)y;
+		    if (z == 1)
+			    winZ = 0;
+		    glReadPixels(x, int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
+
+		    gluUnProject(winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
+
+            return new Vector3((float)posX, (float)posY, (float)posZ);
+        }
     }
 }

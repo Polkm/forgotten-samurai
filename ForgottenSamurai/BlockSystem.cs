@@ -121,75 +121,27 @@ namespace ForgottenSamurai
                             //Indices
                             if (front)
                             {
-                                float[] faceColor = new float[] { color[0] * 0.7f, color[1] * 0.7f, color[2] * 0.7f };
-                                float[] darkFaceColor = new float[] { color[0] * 0.55f, color[1] * 0.55f, color[2] * 0.55f };
-                                tempVerts.AddRange(v110);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v100);
-                                tempColors.AddRange(darkFaceColor);
-                                tempVerts.AddRange(v000);
-                                tempColors.AddRange(darkFaceColor);
-                                tempVerts.AddRange(v010);
-                                tempColors.AddRange(faceColor);
+                                AddFace(tempVerts, tempColors, v110, v100, v000, v010, color, 0.7f);
                             }
                             if (back)
                             {
-                                float[] faceColor = new float[] { color[0] * 0.8f, color[1] * 0.8f, color[2] * 0.8f };
-                                tempVerts.AddRange(v011);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v001);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v101);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v111);
-                                tempColors.AddRange(faceColor);
+                                AddFace(tempVerts, tempColors, v011, v001, v101, v111, color, 0.8f);
                             }
                             if (left)
                             {
-                                float[] faceColor = new float[] { color[0] * 0.85f, color[1] * 0.85f, color[2] * 0.85f };
-                                tempVerts.AddRange(v110);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v111);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v101);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v100);
-                                tempColors.AddRange(faceColor);
+                                AddFace(tempVerts, tempColors, v110, v111, v101, v100, color, 0.85f);
                             }
                             if (right)
                             {
-                                float[] faceColor = new float[] { color[0] * 0.75f, color[1] * 0.75f, color[2] * 0.75f };
-                                tempVerts.AddRange(v011);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v010);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v000);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v001);
-                                tempColors.AddRange(faceColor);
+                                AddFace(tempVerts, tempColors, v011, v010, v000, v001, color, 0.75f);
                             }
                             if (top)
                             {
-                                tempVerts.AddRange(v111);
-                                tempColors.AddRange(color);
-                                tempVerts.AddRange(v110);
-                                tempColors.AddRange(color);
-                                tempVerts.AddRange(v010);
-                                tempColors.AddRange(color);
-                                tempVerts.AddRange(v011);
-                                tempColors.AddRange(color);
+                                AddFace(tempVerts, tempColors, v111, v110, v010, v011, color, 1.0f);
                             }
                             if (bottom)
                             {
-                                float[] faceColor = new float[] { color[0] * 0.5f, color[1] * 0.5f, color[2] * 0.5f };
-                                tempVerts.AddRange(v001);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v000);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v100);
-                                tempColors.AddRange(faceColor);
-                                tempVerts.AddRange(v101);
-                                tempColors.AddRange(faceColor);
+                                AddFace(tempVerts, tempColors, v001, v000, v100, v101, color, 0.5f);
                             }
                         }
                     }
@@ -203,6 +155,25 @@ namespace ForgottenSamurai
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vertices.Length * sizeof(float)), vertices, BufferUsageHint.DynamicDraw);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBOid[1]);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(colors.Length * sizeof(float)), colors, BufferUsageHint.DynamicDraw);
+        }
+
+        void AddFace(List<float> verts, List<float> colors, float[] v1, float[] v2, float[] v3, float[] v4, float[] color, float darkness)
+        {
+            float[] faceColor = new float[] { color[0] * darkness, color[1] * darkness, color[2] * darkness };
+            verts.AddRange(v1);
+            colors.AddRange(faceColor);
+            verts.AddRange(v2);
+            colors.AddRange(faceColor);
+            verts.AddRange(v3);
+            colors.AddRange(faceColor);
+            verts.AddRange(v4);
+            colors.AddRange(faceColor);
+        }
+
+        public void RemoveBlock(int x, int y, int z)
+        {
+            blockIDs[x, y, z] = 0;
+            GenerateVertexData();
         }
 
         Color4 color;
