@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -29,6 +30,20 @@ namespace ForgottenSamurai
             cameraLookAngle = Vector2.Zero;
             cameraFOV = (float)Math.PI / 4;
             cameraFarClip = 800.0f;
+        }
+
+        public void Update()
+        {
+            Camera.cameraPos = Game.player1.position + new Vector3(0, Game.player1.height, 0);
+
+            float deltaX = (System.Windows.Forms.Cursor.Position.X - (Game.bounds.Left + (Game.bounds.Width / 2))) * 0.002f;
+            float deltaY = (System.Windows.Forms.Cursor.Position.Y - (Game.bounds.Top + (Game.bounds.Height / 2))) * 0.002f;
+            Camera.cameraLookAngle.X += deltaX;
+            Camera.cameraLookAngle.Y -= deltaY;
+            Camera.cameraLookVector = (new Vector3((float)Math.Cos(Camera.cameraLookAngle.X), 0, (float)Math.Sin(Camera.cameraLookAngle.X)) * (float)Math.Cos(Camera.cameraLookAngle.Y)) + new Vector3(0, (float)Math.Sin(Camera.cameraLookAngle.Y), 0);
+            Camera.cameraLookPos = Camera.cameraPos + Camera.cameraLookVector;
+
+            System.Windows.Forms.Cursor.Position = new System.Drawing.Point(Game.bounds.Left + (Game.bounds.Width / 2), Game.bounds.Top + (Game.bounds.Height / 2));
         }
     }
 }
