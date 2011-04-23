@@ -13,9 +13,10 @@ namespace ForgottenSamurai
     class Game : GameWindow
     {
         public static bool gamePaused;
-        public player player1;
+        public static System.Drawing.Rectangle bounds;
+        public static Camera camera;
+        public static player player1;
         public Terrain terrain;
-        public Camera camera;
 
         public bool previusKeyTilde;
 
@@ -29,6 +30,7 @@ namespace ForgottenSamurai
             camera = new Camera();
             previusKeyTilde = false;
             ResumeGame();
+            
         }
 
         protected override void OnLoad(EventArgs e)
@@ -52,6 +54,7 @@ namespace ForgottenSamurai
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             base.OnUpdateFrame(e);
+            bounds = Bounds;
 
             if (Keyboard[Key.Escape])
                 Exit();
@@ -80,15 +83,7 @@ namespace ForgottenSamurai
                     player1.position.Z -= (float)Math.Sin(Camera.cameraLookAngle.X);
                 }
 
-                Camera.cameraPos = player1.position + new Vector3(0, player1.height, 0);
-                float deltaX = (System.Windows.Forms.Cursor.Position.X - (Bounds.Left + (Bounds.Width / 2))) * 0.002f;
-                float deltaY = (System.Windows.Forms.Cursor.Position.Y - (Bounds.Top + (Bounds.Height / 2))) * 0.002f;
-                Camera.cameraLookAngle.X += deltaX;
-                Camera.cameraLookAngle.Y -= deltaY;
-                Camera.cameraLookVector = (new Vector3((float)Math.Cos(Camera.cameraLookAngle.X), 0, (float)Math.Sin(Camera.cameraLookAngle.X)) * (float)Math.Cos(Camera.cameraLookAngle.Y)) + new Vector3(0, (float)Math.Sin(Camera.cameraLookAngle.Y), 0);
-                Camera.cameraLookPos = Camera.cameraPos + Camera.cameraLookVector;
-
-                System.Windows.Forms.Cursor.Position = new System.Drawing.Point(Bounds.Left + (Bounds.Width / 2), Bounds.Top + (Bounds.Height / 2));
+                camera.Update();
             }
 
             if (Keyboard[Key.Tilde] && !previusKeyTilde)
