@@ -24,9 +24,9 @@ namespace ForgottenSamurai
         {
             VSync = VSyncMode.On;
             GL.Enable(EnableCap.CullFace);
-            player1 = new player();
-            player1.position = new Vector3(0, 16, 0);
             terrain = new Terrain();
+            player1 = new player();
+            player1.position = new Vector3(Terrain.size / 2 * BlockSystem.size, BlockSystem.size * Terrain.height, Terrain.size / 2 * BlockSystem.size);
             camera = new Camera();
             ResumeGame();
 
@@ -107,6 +107,9 @@ namespace ForgottenSamurai
                     player1.position.X -= (float)Math.Cos(Camera.cameraLookAngle.X);
                     player1.position.Z -= (float)Math.Sin(Camera.cameraLookAngle.X);
                 }
+
+                if (Mouse[MouseButton.Left])
+                    player1.LeftPress();
 
                 camera.Update();
             }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 using OpenTK;
 using OpenTK.Graphics;
@@ -12,27 +14,32 @@ namespace ForgottenSamurai
     class Terrain
     {
         public static Random random;
-        public static BlockSystem[, ,] chunks;
-        public static int size = 10;
-        public static int height = 1;
+        //public static BlockSystem[, ,] chunks;
+        public static List<List<List<BlockSystem>>> chunks;
+        public static int size = 5;
+        public static int height = 5;
         float frustrumRadius;
 
         public Terrain()
         {
             random = new Random();
-            chunks = new BlockSystem[size, 2, size];
+            chunks = new List<List<List<BlockSystem>>>();
+            //chunks = new BlockSystem[size, 2, size];
             frustrumRadius = 0.0f;
 
             float genCounter = 0;
+            
             for (int x = 0; x < size; x++)
             {
+                chunks.Add(new List<List<BlockSystem>>());
                 for (int y = 0; y < height; y++)
                 {
+                    chunks[x].Add(new List<BlockSystem>());
                     for (int z = 0; z < size; z++)
                     {
-                        chunks[x, y, z] = new BlockSystem();
-                        chunks[x, y, z].position = new Vector3(x * BlockSystem.size, y * BlockSystem.size, z * BlockSystem.size);
-                        chunks[x, y, z].chunkPos = new Vector3(x, y, z);
+                        chunks[x][y].Add(new BlockSystem());
+                        chunks[x][y][z].position = new Vector3(x * BlockSystem.size, y * BlockSystem.size, z * BlockSystem.size);
+                        chunks[x][y][z].chunkPos = new Vector3(x, y, z);
                         Console.Clear();
                         Console.Write(Math.Round(genCounter / (size * size * height) * 100.0f));
                         Console.Write("% generated");
@@ -48,7 +55,7 @@ namespace ForgottenSamurai
                 {
                     for (int z = 0; z < size; z++)
                     {
-                        chunks[x, y, z].GenerateVertexData();
+                        chunks[x][y][z].GenerateVertexData();
                         Console.Clear();
                         Console.Write(Math.Round(buildCounter / (size * size * height) * 100.0f));
                         Console.Write("% vertex built");
@@ -81,12 +88,12 @@ namespace ForgottenSamurai
                 {
                     for (int z = 0; z < size; z++)
                     {
-                        Vector3 chunkCenter = chunks[x, y, z].position + (new Vector3(16.0f, 16.0f, 16.0f) * 0.5f);
+                        Vector3 chunkCenter = chunks[x][y][z].position + (new Vector3(16.0f, 16.0f, 16.0f) * 0.5f);
                         if (SphereIntersectsSphere(FrustrumCenter, frustrumRadius, chunkCenter, BlockSystem.radius))
                         {
                             if (ShpereIntersectsCone(chunkCenter, BlockSystem.radius, Camera.cameraPos, vLookVector, (float)Math.Cos(Math.PI / 3), (float)Math.Sin(Math.PI / 3)))
                             {
-                                chunks[x, y, z].Draw();
+                                chunks[x][y][z].Draw();
                                 rendering++;
                             }
                         }
