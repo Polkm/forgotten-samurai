@@ -29,7 +29,7 @@ namespace ForgottenSamurai
             cameraLookVector = Vector3.UnitZ;
             cameraLookAngle = Vector2.Zero;
             cameraFOV = (float)Math.PI / 4;
-            cameraFarClip = 800.0f;
+            cameraFarClip = 160.0f;
         }
 
         public void Update()
@@ -40,6 +40,8 @@ namespace ForgottenSamurai
             float deltaY = (System.Windows.Forms.Cursor.Position.Y - (Game.bounds.Top + (Game.bounds.Height / 2))) * 0.002f;
             Camera.cameraLookAngle.X += deltaX;
             Camera.cameraLookAngle.Y -= deltaY;
+            if (Camera.cameraLookAngle.Y < -Math.PI / 2 + 0.0001f)
+                Camera.cameraLookAngle.Y = (float)-Math.PI / 2 + 0.0001f;
             Camera.cameraLookVector = (new Vector3((float)Math.Cos(Camera.cameraLookAngle.X), 0, (float)Math.Sin(Camera.cameraLookAngle.X)) * (float)Math.Cos(Camera.cameraLookAngle.Y)) + new Vector3(0, (float)Math.Sin(Camera.cameraLookAngle.Y), 0);
             Camera.cameraLookPos = Camera.cameraPos + Camera.cameraLookVector;
 
