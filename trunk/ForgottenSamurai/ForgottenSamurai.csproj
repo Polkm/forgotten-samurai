@@ -34,14 +34,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="block.cs" />
     <Compile Include="BlockSystem.cs" />
     <Compile Include="camera.cs" />
     <Compile Include="main.cs" />
+    <Compile Include="physics.cs" />
     <Compile Include="player.cs" />
     <Compile Include="Terrain\Terrain.cs" />
     <Compile Include="Terrain\TerrainGen.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="BulletSharp, Version=0.14.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\BulletSharp.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
