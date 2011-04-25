@@ -22,6 +22,7 @@ namespace ForgottenSamurai
         public static Vector2 cameraLookAngle = Vector2.Zero;
         public static float cameraFOV = 0f;
         public static float cameraFarClip = 0f;
+        public static int[] viewPort;
 
         public Camera()
         {
@@ -30,6 +31,7 @@ namespace ForgottenSamurai
             cameraLookAngle = Vector2.Zero;
             cameraFOV = (float)Math.PI / 4;
             cameraFarClip = 160.0f;
+            viewPort = new int[4];
         }
 
         public void Update()
@@ -50,26 +52,24 @@ namespace ForgottenSamurai
 
         public static Vector3 Get2Dto3D(int x, int y)
         {
-            int[] viewport = new int[4];
             Matrix4 modelviewMatrix, projectionMatrix;
             GL.GetFloat(GetPName.ModelviewMatrix, out modelviewMatrix);
             GL.GetFloat(GetPName.ProjectionMatrix, out projectionMatrix);
-            GL.GetInteger(GetPName.Viewport, viewport);
 
             // get depth of clicked pixel
             float[] t = new float[1];
-            GL.ReadPixels(x, viewport[3] - y, 1, 1, OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent, PixelType.Float, t);
+            GL.ReadPixels(x, viewPort[3] - y, 1, 1, OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent, PixelType.Float, t);
 
-            return UnProject(new Vector3(x, viewport[3] - y, t[0]), modelviewMatrix, projectionMatrix, viewport);
+            return UnProject(new Vector3(x, viewPort[3] - y, t[0]), modelviewMatrix, projectionMatrix);
         }
 
-        public static Vector3 UnProject(Vector3 screen, Matrix4 view, Matrix4 projection, int[] view_port)
+        public static Vector3 UnProject(Vector3 screen, Matrix4 view, Matrix4 projection)
         {
             Vector4 pos = new Vector4();
 
             // Map x and y from window coordinates, map to range -1 to 1 
-            pos.X = (screen.X - (float)view_port[0]) / (float)view_port[2] * 2.0f - 1.0f;
-            pos.Y = (screen.Y - (float)view_port[1]) / (float)view_port[3] * 2.0f - 1.0f;
+            pos.X = (screen.X - (float)viewPort[0]) / (float)viewPort[2] * 2.0f - 1.0f;
+            pos.Y = (screen.Y - (float)viewPort[1]) / (float)viewPort[3] * 2.0f - 1.0f;
             pos.Z = screen.Z * 2.0f - 1.0f;
             pos.W = 1.0f;
 

@@ -63,6 +63,9 @@ namespace ForgottenSamurai
         public void RightClick()
         {
             Vector3 worldPos = Camera.Get2Dto3D(Game.mouse.X, Game.mouse.Y);
+
+            
+
             Vector3 mainAxis = GetAxisAndRoundWorld(ref worldPos);
 
             int block1 = 0;
@@ -79,9 +82,15 @@ namespace ForgottenSamurai
             block2 = GetBlockID(chunkPos2, blockPos2);
 
             if (block1 == 0 && block1 != -1)
-                Terrain.chunks[(int)chunkPos1.X][(int)chunkPos1.Y][(int)chunkPos1.Z].AddBlock((int)blockPos1.X, (int)blockPos1.Y, (int)blockPos1.Z, 1);
+            {
+                block newBlock = new block((chunkPos1 * BlockSystem.size) + blockPos1);
+                //Terrain.chunks[(int)chunkPos1.X][(int)chunkPos1.Y][(int)chunkPos1.Z].AddBlock((int)blockPos1.X, (int)blockPos1.Y, (int)blockPos1.Z, 1);
+            }
             if (block2 == 0 && block2 != -1)
-                Terrain.chunks[(int)chunkPos2.X][(int)chunkPos2.Y][(int)chunkPos2.Z].AddBlock((int)blockPos2.X, (int)blockPos2.Y, (int)blockPos2.Z, 1);
+            {
+                block newBlock = new block((chunkPos2 * BlockSystem.size) + blockPos2);
+                //Terrain.chunks[(int)chunkPos2.X][(int)chunkPos2.Y][(int)chunkPos2.Z].AddBlock((int)blockPos2.X, (int)blockPos2.Y, (int)blockPos2.Z, 1);
+            }
         }
 
         Vector3 GetAxisAndRoundWorld(ref Vector3 worldPos)

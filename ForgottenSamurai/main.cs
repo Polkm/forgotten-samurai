@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 
 using OpenTK;
@@ -13,10 +14,13 @@ namespace ForgottenSamurai
     class Game : GameWindow
     {
         public static bool gamePaused;
+        public static Physics physics;
         public static System.Drawing.Rectangle bounds;
         public static Camera camera;
         public static player player1;
         public Terrain terrain;
+
+        public static List<block> blocks;
 
         public static MouseDevice mouse;
 
@@ -24,7 +28,9 @@ namespace ForgottenSamurai
         {
             VSync = VSyncMode.On;
             GL.Enable(EnableCap.CullFace);
+            physics = new Physics();
             terrain = new Terrain();
+            blocks = new List<block>();
             player1 = new player();
             player1.position = new Vector3(Terrain.size / 2 * BlockSystem.size, BlockSystem.size * Terrain.height, Terrain.size / 2 * BlockSystem.size);
             camera = new Camera();
@@ -70,6 +76,11 @@ namespace ForgottenSamurai
             base.OnResize(e);
 
             GL.Viewport(ClientRectangle.X, ClientRectangle.Y, ClientRectangle.Width, ClientRectangle.Height);
+            Camera.viewPort[0] = ClientRectangle.X;
+            Camera.viewPort[1] = ClientRectangle.Y;
+            Camera.viewPort[2] = ClientRectangle.Width;
+            Camera.viewPort[3] = ClientRectangle.Height;
+
             Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(Camera.cameraFOV, Width / (float)Height, 1.0f, Camera.cameraFarClip);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref projection);
@@ -86,6 +97,29 @@ namespace ForgottenSamurai
 
             if (!gamePaused)
             {
+                physics.Update((float)e.Time);
+
+                block blk;
+                for (int x = 0; x < blocks.Count; x++)
+                {
+                    blk = blocks[x];
+                    if (!blk.body.IsActive)
+                    {
+                        Vector3 pos = blk.body.CenterOfMassPosition;
+                        pos.X = (float)Math.Floor(pos.X);
+                        pos.Y = (float)Math.Floor(pos.Y);
+                        pos.Z = (float)Math.Floor(pos.Z);
+                        Vector3 chunkPos = new Vector3(pos.X / BlockSystem.size, pos.Y / BlockSystem.size, pos.Z / BlockSystem.size);
+                        chunkPos.X = (float)Math.Floor(chunkPos.X);
+                        chunkPos.Y = (float)Math.Floor(chunkPos.Y);
+                        chunkPos.Z = (float)Math.Floor(chunkPos.Z);
+                        pos = pos - (chunkPos * BlockSystem.size);
+                        if (Terrain.IsValidChunk(chunkPos))
+                            Terrain.chunks[(int)chunkPos.X][(int)chunkPos.Y][(int)chunkPos.Z].AddBlock((int)pos.X, (int)pos.Y, (int)pos.Z, 1, false);
+                        blk.Remove();
+                    }
+                }
+
                 if (Keyboard[Key.A])
                 {
                     player1.position.X += (float)Math.Cos(Camera.cameraLookAngle.X - (Math.PI / 2));
@@ -143,6 +177,9 @@ namespace ForgottenSamurai
             GL.LoadMatrix(ref modelview);
 
             terrain.Draw();
+
+            foreach (block blk in blocks)
+                blk.Draw();
 
             SwapBuffers();
         }

@@ -16,8 +16,8 @@ namespace ForgottenSamurai
         public static Random random;
         //public static BlockSystem[, ,] chunks;
         public static List<List<List<BlockSystem>>> chunks;
-        public static int size = 5;
-        public static int height = 5;
+        public static int size = 10;
+        public static int height = 2;
         float frustrumRadius;
 
         public Terrain()
@@ -64,6 +64,11 @@ namespace ForgottenSamurai
                 }
             }
             Console.Clear();
+        }
+
+        public static bool IsValidChunk(Vector3 chunkPos)
+        {
+            return chunkPos.X >= 0 && chunkPos.X < Terrain.size && chunkPos.Y >= 0 && chunkPos.Y < Terrain.height && chunkPos.Z >= 0 && chunkPos.Z < Terrain.size;
         }
 
         int rendering = 0;
