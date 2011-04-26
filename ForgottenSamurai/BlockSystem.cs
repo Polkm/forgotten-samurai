@@ -21,9 +21,9 @@ namespace ForgottenSamurai
         public byte[, ,] blockIDs;
 
         uint[] VBOid;
-        float[] vertices;
         int vertCount;
-        float[] colors;
+        float[] vertices;
+        byte[] colors;
 
         List<RigidBody> physicsBoxes;
 
@@ -53,12 +53,11 @@ namespace ForgottenSamurai
             byte currentType;
             bool front, back, left, right, top, bottom;
 
-            vertices = new float[589824];
-            colors = new float[589824];
-            //List<float> tempColors = new List<float>();
+            vertices = new float[442368];
+            colors = new byte[442368];
 
-            float[] v110, v100, v000, v010, v011, v001, v101, v111, color;
-            color = new float[] { 0.0f, 0.0f, 0.0f };
+            float[] v110, v100, v000, v010, v011, v001, v101, v111;
+            byte[] color = new byte[] { 0, 0, 0 };
 
             /*foreach (RigidBody body in physicsBoxes)
                 Game.physics.World.RemoveRigidBody(body);
@@ -110,17 +109,13 @@ namespace ForgottenSamurai
                                 v111 = new float[] { x + 1, y + 1, z + 1 };
 
                                 if (currentType == 1)
-                                    color = new float[] { .266f, .349f, .145f };
+                                    color = new byte[] { 68, 89, 37 };
                                 if (currentType == 2)
-                                    color = new float[] { .568f, .651f, .274f };
+                                    color = new byte[] { 46, 46, 56 };
                                 if (currentType == 3)
-                                    color = new float[] { .749f, .686f, .561f };
+                                    color = new byte[] {  99, 91, 74 };
                                 if (currentType == 4)
-                                    color = new float[] { 1.0f, 1.0f, 0.0f };
-                                if (currentType == 5)
-                                    color = new float[] { 0.0f, 1.0f, 1.0f };
-                                if (currentType == 6)
-                                    color = new float[] { 1.0f, 0.0f, 1.0f };
+                                    color = new byte[] { 242, 242, 233 };
 
                                 if (front)
                                     AddFace(v110, v100, v000, v010, color, 0.7f);
@@ -143,16 +138,28 @@ namespace ForgottenSamurai
                     }
                 }
             }
+            /*float[] tempArray = new float[vertCount];
+            for (int i = 0; i < vertCount; i++)
+                tempArray[i] = vertices[i];
+            vertices = tempArray;
+            byte[] tempColArray = new byte[vertCount];
+            for (int i = 0; i < vertCount; i++)
+                tempColArray[i] = colors[i];
+            colors = tempColArray;*/
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBOid[0]);
             GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vertCount * sizeof(float)), vertices, BufferUsageHint.DynamicDraw);
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBOid[1]);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vertCount * sizeof(float)), colors, BufferUsageHint.DynamicDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vertCount * sizeof(byte)), colors, BufferUsageHint.DynamicDraw);
+
+
+            vertices = null;
+            colors = null;
         }
 
-        void AddFace(float[] v1, float[] v2, float[] v3, float[] v4, float[] color, float darkness)
+        void AddFace(float[] v1, float[] v2, float[] v3, float[] v4, byte[] color, float darkness)
         {
-            float[] faceColor = new float[] { color[0] * darkness, color[1] * darkness, color[2] * darkness };
+            byte[] faceColor = new byte[] { (byte)((float)(color[0]) * darkness * 0.5f), (byte)((float)(color[1]) * darkness * 0.5f), (byte)((float)(color[2]) * darkness * 0.5f) };
             AddVertex(v1, faceColor);
             AddVertex(v2, faceColor);
             AddVertex(v3, faceColor);
@@ -161,7 +168,7 @@ namespace ForgottenSamurai
             AddVertex(v4, faceColor);
         }
 
-        void AddVertex(float[] v1, float[] color)
+        void AddVertex(float[] v1, byte[] color)
         {
             vertices[vertCount] = v1[0];
             vertices[vertCount + 1] = v1[1];
@@ -174,7 +181,6 @@ namespace ForgottenSamurai
 
         public void Draw()
         {
-            
             GL.MatrixMode(MatrixMode.Modelview);
             GL.PushMatrix();
             GL.Translate(position);
@@ -186,7 +192,7 @@ namespace ForgottenSamurai
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, VBOid[1]);
             GL.EnableClientState(ArrayCap.ColorArray);
-            GL.ColorPointer(3, ColorPointerType.Float, 0, 0);
+            GL.ColorPointer(3, ColorPointerType.Byte, 0, 0);
 
             GL.DrawArrays(BeginMode.Triangles, 0, vertCount);
 
