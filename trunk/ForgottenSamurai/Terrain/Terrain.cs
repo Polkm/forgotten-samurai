@@ -16,8 +16,8 @@ namespace ForgottenSamurai
         public static Random random;
         //public static BlockSystem[, ,] chunks;
         public static List<List<List<BlockSystem>>> chunks;
-        public static int size = 10;
-        public static int height = 2;
+        public static int size = 20;
+        public static int height = 1;
         float frustrumRadius;
 
         public Terrain()
